@@ -1,0 +1,58 @@
+Description: Fix for gcc 4.3, bug#427666, rev. rrelyea.
+Origin: http://pkgs.fedoraproject.org/gitweb/?p=coolkey.git;a=commit;h=57d00878ae19f39b297c3dd410a791a54a50cd90
+Reviewed-by: Jack Magne <jmagne@fedoraproject.org>
+Date:   Thu Feb 14 23:51:04 2008 +0000
+
+ https://fedorahosted.org/coolkey/browser/?rev=72
+    Fix for gcc 4.3, bug#427666, rev. rrelyea.
+
+--- a/src/coolkey/log.cpp
++++ b/src/coolkey/log.cpp
+@@ -18,6 +18,8 @@
+  * ***** END COPYRIGHT BLOCK *****/
+ 
+ #include <string>
++#include <string.h>
++#include <stdlib.h>
+ #include "mypkcs11.h"
+ #include <assert.h>
+ #include <stdio.h>
+--- a/src/coolkey/machdep.cpp
++++ b/src/coolkey/machdep.cpp
+@@ -33,6 +33,8 @@
+ #include <sys/stat.h>
+ #include <sys/mman.h>
+ #include <pthread.h>
++#include <string.h>
++#include <stdlib.h>
+ #endif
+ 
+ #ifdef _WIN32
+--- a/src/coolkey/object.cpp
++++ b/src/coolkey/object.cpp
+@@ -21,6 +21,7 @@
+ #include "PKCS11Exception.h"
+ #include "object.h"
+ #include <algorithm>
++#include <string.h>
+ 
+ using std::find_if;
+ 
+--- a/src/coolkey/slot.cpp
++++ b/src/coolkey/slot.cpp
+@@ -25,7 +25,6 @@
+ #include "PKCS11Exception.h"
+ #include <winscard.h>
+ #include "slot.h"
+-#include <memory.h>
+ #include "zlib.h"
+ #include "params.h"
+ 
+@@ -33,7 +32,6 @@
+ 
+ #define MIN(x, y) ((x) < (y) ? (x) : (y))
+ 
+-using std::auto_ptr;
+ 
+ 
+ #ifdef DEBUG

@@ -1,0 +1,200 @@
+coolkey (1.1.0-16) unstable; urgency=medium
+
+  * Bump debhelper from deprecated 9 to 12.
+  * d/control: Add Rules-Requires-Root: no
+  * d/control: fix useless-autoreconf-build-depends autotools-dev
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sun, 13 Sep 2020 13:20:48 +0200
+
+coolkey (1.1.0-15) unstable; urgency=medium
+
+  * d/copyright: fix Format URL using https.
+  * d/copyright: remove duplicate paragraph
+    dep5-copyright-license-name-not-unique (paragraph at line 75)
+  * d/libckyapplet1-dev.lintian-overrides: remove unused override
+  * d/README.Debian: fix spelling-error-in-readme-debian
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Wed, 07 Aug 2019 15:44:19 +0200
+
+coolkey (1.1.0-14) unstable; urgency=medium
+
+  * d/changelog: remove extra trailing-whitespace
+    lintian: file-contains-trailing-whitespace debian/changelog (line 7)
+  * d/control: update vcs-field to use salsa.debian.org
+  * d/control: update libckyapplet1-dev section: from devel to libdevel
+    wrong-section-according-to-package-name libckyapplet1-dev => libdevel
+  * remove config.guess & config.sub
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Mon, 04 Mar 2019 18:56:26 +0100
+
+coolkey (1.1.0-13) unstable; urgency=medium
+
+  * Fix "uninitialized variable causes firefox to crash when card is
+    inserted into reader" patch in debian/patches/coolkey-nextSize.patch
+    (Closes: #698230)
+  * Install the libckyapplet.pc in the correct multi-arch directory
+  * debian/control: use canonical Vcs-* fields
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sat, 18 Jan 2014 15:06:42 +0000
+
+coolkey (1.1.0-12) unstable; urgency=low
+
+  * The coolkey device driver has been updated to follow the new Card
+    Compatibility Container (CCC) specification, so that
+    Gemalto TOPDLGX4 144K CAC cards are now supported.
+  * Handle pcscd restarting.
+  * debian/control: Standards-Version: 3.9.2 -> 3.9.3.
+    Dep3 headers updated in debian/patches files;
+    Dep5 Machine-readable debian/copyright
+
+ -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 11 Apr 2012 20:56:20 -0400
+
+coolkey (1.1.0-11) unstable; urgency=low
+
+  * debian/control: Fix libckyapplet1-dev_1.1.0-10_amd64.deb: package says
+    section is libdevel, override says devel.
+  * Fix "Coolkey don't working with ActiveKey Sim" proposed patch applied
+    (Closes: #634870)
+  * Fix lintian warning:
+    I: coolkey: package-contains-empty-directory usr/bin/
+  * Use debhelper version 9 to have automatic hardening
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Mon, 09 Apr 2012 17:12:01 +0200
+
+coolkey (1.1.0-10) unstable; urgency=low
+
+  * Fix "FTBFS: /usr/bin/ld: cannot find -lsoftokn3" do not build pk11install
+    anymore (Closes: #632803)
+  * Fix "Broken dependencies: pk11install: error while loading shared
+    libraries: libsoftokn3.so" pk11install is no more provided
+    (Closes: #635033)
+  * Do not provide .la files any more. Fix lintian errors:
+    E: coolkey: non-empty-dependency_libs-in-la-file
+    usr/lib/pkcs11/libcoolkeypk11.la
+    E: libckyapplet1-dev: non-empty-dependency_libs-in-la-file
+    usr/lib/libckyapplet.la
+  * debian/control: Standards-Version: 3.8.3 -> 3.9.2. No change needed.
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sun, 07 Aug 2011 12:49:58 +0200
+
+coolkey (1.1.0-9) unstable; urgency=low
+
+  * debian/patches/coolkey-latest.patch: refresh
+  * debian/patches/coolkey-pcsc-lite: use SCARD_READERSTATE * instead of
+    LPSCARD_READERSTATE not present in pcsc-lite from squeeze (1.5.5)
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sun, 27 Mar 2011 15:22:11 +0200
+
+coolkey (1.1.0-8) unstable; urgency=low
+
+  * Fix "FTBFS: cky_card.h:44: error: expected ')' before '*' token"
+    patch in coolkey-pcsc-lite (Closes: #614437)
+  * debian/patches/spelling-error-in-binary: I: coolkey:
+    spelling-error-in-binary ./usr/lib/pkcs11/libcoolkeypk11.so Inconsistant
+    Inconsistent
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Wed, 23 Feb 2011 20:36:20 +0000
+
+coolkey (1.1.0-7) experimental; urgency=low
+
+  * Update packaging using dh and dpkg-source 3.0 (quilt) format
+  * upstream coolkey-coolkey-cache-dir-move.patch
+  * upstream coolkey-gcc43.patch
+  * upstream coolkey-latest.patch
+  * upstream coolkey-simple-bugs.patch
+  * upstream coolkey-thread-fix.patch
+  * upstream coolkey-cac.patch
+  * upstream coolkey-cac-1.patch
+
+ -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 22 Dec 2010 19:12:07 -0500
+
+coolkey (1.1.0-6) unstable; urgency=low
+
+  * debian/control: Standards-Version: 3.7.3 => 3.8.3
+    add debian/README.source (lintian warning patch-system-but-no-source-readme)
+  * use debhelper compat level 7 instead of (deprecated) 4
+  * debian/control: add ${misc:Depends}
+    lintian warning debhelper-but-no-misc-depends
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sun, 01 Nov 2009 16:10:52 +0100
+
+coolkey (1.1.0-5) unstable; urgency=medium
+
+  * debian/control: Build-Depends: libnspr4-dev
+    Closes: #486956 "FTBFS: pkcs11t.h:59:21: error: prtypes.h: No such file or
+    directory"
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sun, 22 Jun 2008 07:42:03 +0200
+
+coolkey (1.1.0-4) unstable; urgency=low
+
+  * debian/rules:
+   - use -rpath to find libsoftokn3.so in /usr/lib/nss/ since nss
+    version 3.12.0~1.9b1-1 moved it there.
+    Closes: #456877 "coolkey: FTBFS: /usr/bin/ld: cannot find -lsoftokn3"
+   - do not ignore $(MAKE) clean result
+    (debian-rules-ignores-make-clean-error lintian warning)
+  * debian/control:
+   - Standards-Version: 3.7.2.2 -> 3.7.3. No change needed
+   - use a debian/compat file instead of DH_COMPAT in debian/rules
+   - add a minimal Build-Depends: version on debhelper
+   - set libckyapplet1-dev in Section: libdevel instead of devel
+   - change coolkey Depends: from libccid, pcscd to libpcsclite1
+     Closes: #445164 "coolkey: Update libccid depends for pcsc-omnikey"
+   - libckyapplet1-dev Depends: on the ${binary:Version} of libckyapplet1
+   - add a Homepage: field
+   - add Vcs-Browser: and Vcs-Svn: fields
+  * debian/patches/{01_coolkey_cpp.dpatch, 02_log_cpp.dpatch,
+    03_machdep_cpp.dpatch, 04_object_cpp.dpatch, 05_slot_cpp.dpatch}: fixes
+    for g++ 4.3.  Closes: #455658 "FTBFS with GCC 4.3: #define redefined"
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sun, 06 Jan 2008 17:58:33 +0100
+
+coolkey (1.1.0-3) unstable; urgency=low
+
+  * fix for CVE-2007-4129 - correct cache file handling
+    debian/patches/06_machdep_cpp_CVE-2007-4129.dpatch
+
+ -- A. Maitland Bottoms <bottoms@debian.org>  Mon, 03 Sep 2007 21:49:06 -0400
+
+coolkey (1.1.0-2) unstable; urgency=low
+
+  * debian/rules: install config.{config,guess} from autotools-dev
+    Closes: #414457 "coolkey(GNU/k*BSD): FTBFS: out of date
+    config.sub/config.guess"
+
+ -- Ludovic Rousseau <rousseau@debian.org>  Sun, 18 Mar 2007 21:57:58 +0100
+
+coolkey (1.1.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- A. Maitland Bottoms <bottoms@debian.org>  Tue, 20 Feb 2007 20:19:34 -0500
+
+coolkey (0.20061215-1) experimental; urgency=low
+
+  * Mention all licenses from source in package copyright file
+  * new upstream:
+          - Some tokens do not support RSA_PKCS1_SHA1, use the NOPAD version
+            and hand build the PKCS1 padding.
+          - Remove reset and CUID reading for CAC. This was causing
+            concurrent apps to loose login state.
+  * Upload to unstable. (Closes: #400843)
+
+ -- A. Maitland Bottoms <bottoms@debian.org>  Thu, 21 Dec 2006 20:38:11 -0500
+
+coolkey (0.20061127-2) experimental; urgency=low
+
+  * Update Build-Depends to include pkg-config
+
+ -- A. Maitland Bottoms <bottoms@debian.org>  Wed, 29 Nov 2006 11:39:45 -0500
+
+coolkey (0.20061127-1) experimental; urgency=low
+
+  * Initial package. (Closes: #400843)
+
+ -- A. Maitland Bottoms <bottoms@debian.org>  Tue, 28 Nov 2006 23:52:14 -0500
+
+Local variables:
+add-log-mailing-address "bottoms@debian.org"
+End:

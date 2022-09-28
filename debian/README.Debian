@@ -1,0 +1,127 @@
+Some hints on making use of Coolkey.
+
+The active ingredient in the Coolkey package is the file
+/usr/lib/pkcs11/libcoolkeypk11.so - which is a "PKCS #11 module".
+Several applications can make use of PKCS #11 modules - including
+iceweasel, iceape, icedove, epiphany and evolution.
+
+The web browser and email applications usually have a GUI allowing
+the user to control how PKCS #11 modules and PKI certificates are
+used. Many applications use an underlying cryptography library
+from the Mozilla project called the "Network Security Service".
+Where there is no gui - such as the Gnome Evolution MUA, the
+libnss3-tools Debian package provides Network Security Service
+tools for manipulating an application's database of PKCS #11 modules
+and PKI certificates.
+
+The Coolkey package also provides the pk11install application.
+"pk11install is really a generic tool that probably should be moved to
+NSS (you can change the parameters and install any PKCS #11
+module)." ... "It differs form modutil in that it doesn't try
+to load the module itself to install it. It also differs from modutil
+in that it 'knows' where several NSS apps store their database (OK,
+where old netscape and modern mozilla apps). You can run it as a user
+and install your favorite PKCS #11 module into all the
+browsers/mailreaders you have installed."
+ - Bob Relyea, a coolkey developer.
+
+Coolkey depends upon the pcscd musclecard token management daemon.
+(Using libpcsclite to communicate.) Coolkey will dynamically detect
+pcscd and the presence of tokens when the system has pcscd managing
+one or more PKI hardware token device interfaces (such as an
+ActivCard, Inc. SmartCard Reader, or a Dell smart card reader
+keyboard, or other CCID and/or musclecard supported devices).
+
+A user will have a PKI capable Smart Card inserted in the reader, and
+then Coolkey will allow the web browser to authenticate the user to a
+web server, and a Mail User Agent to sign and decrypt email messages.
+
+Public Key Infrastructure, PKI, is all about certificate management.
+The user has the responsibility to decide which can be trusted, given
+the set of Certificate Authority certificates (and also subsidiary
+CA certificates) and individual and system ID certificates. Most
+applications provide a GUI for managing certificates, or the NSS
+(Network Security Service) certutil can be useful. Even when an
+application is using coolkey and the hardware and smart card token are
+present, the application probably won't carry out authentication or
+signing operations unless it also has the right chain of CA
+certificates installed and trusted.
+
+The Debian package ca-certificates has quite a few CA certificates that
+might be useful. Those using Coolkey with DoD PKI might look into
+Bug #274963:
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=274963
+Read /usr/share/doc/ca-certificates/README.Debian and you can
+help resolve that bug.
+
+Of course, with PKI one should proceed with caution and due diligence
+when selecting CA certificates to trust. Some starting places for
+finding DoD CA certificates include:
+https://ca-5.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-6.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-7.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-8.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-9.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-10.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-11.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-12.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-13.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-14.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-15.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-16.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-17.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-18.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-19.c3pki.chamb.disa.mil/ca/GetCAChain.html
+https://ca-20.c3pki.den.disa.mil/ca/GetCAChain.html
+https://ca-21.c3pki.chamb.disa.mil/ca/GetCAChain.html
+
+
+Coolkey with Mozilla-based NSS applications ( firefox, iceweasel,
+iceape, thunderbird, icedove...)
+
+From the Application GUI:
+ - Edit - Preferences
+ - Security tab (or possibly Encryption tab)
+ - Security Devices button
+   in the Device Manager pop-up window
+   - Load button
+     in the Load PKCS#11 Device pop-up window
+     - give it a name, such as "Coolkey PKCS#11 Module"
+     - select the filename /usr/lib/pkcs11/libcoolkeypk11.so
+     with the smart card inserted
+     - OK button
+
+  Not that selecting the PKCS#11 token in the Device Manager window
+  will provide for log in, log out and change password operations
+  using the smart card's PIN.
+
+  Then under the Edit - Preferences - Security tab, selecting
+  - View Certificates button
+  will show the certificates present on the smart card under the
+  My Certiciates tab.
+
+
+Coolkey with Gnome Epiphany web browser:
+
+The Debian package epiphany-extensions should be installed to
+provide the necessary NSS support.
+From the Tools menu item, the manage Security Devices and
+Certificate Manager GUIs are available.
+
+
+Coolkey with Evolution:
+You can use the NSS modultil command to insert your PKCS #11
+token into evolution's secmod.db:
+`modutil -add "Coolkey" -libfile /usr/lib/pkcs11/libcoolkeypk11.so -dbdir .evolution`
+from my home directory did the right thing.
+Alas, evolution as of version 2.6.3-3 still had some problems picking
+the right certificate... perhaps evolution bugzilla bug 372435.
+
+Updates to support newer cards...
+as of version 1.1.0-12 coolkey includes support. For discussion see
+https://bugzilla.redhat.com/show_bug.cgi?id=593017
+https://bugzilla.redhat.com/show_bug.cgi?id=534172
+http://rhn.redhat.com/errata/RHEA-2011-0111.html
+
+ -- A. Maitland Bottoms <bottoms@debian.org>, Tue, 10 Apr 2012 19:07:33 -0400
+

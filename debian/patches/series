@@ -1,0 +1,11 @@
+spelling-error-in-binary
+coolkey-pcsc-lite
+coolkey-cache-dir-move.patch 
+coolkey-gcc43.patch 
+coolkey-latest.patch
+coolkey-simple-bugs.patch
+coolkey-thread-fix.patch
+coolkey-cac-rhl5.patch
+0001-Fix-working-with-empty-certificates-in-not-zero-slot.patch
+Handle-pcscd-restarting
+coolkey-nextSize.patch

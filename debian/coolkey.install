@@ -1,0 +1,2 @@
+src/coolkey/.libs/libcoolkeypk11.so usr/lib/pkcs11/
+src/coolkey/.libs/libcoolkeypk11.a usr/lib/pkcs11/

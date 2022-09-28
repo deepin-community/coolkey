@@ -1,0 +1,35 @@
+Source: coolkey
+Section: admin
+Priority: optional
+Maintainer: A. Maitland Bottoms <bottoms@debian.org>
+Uploaders: Ludovic Rousseau <rousseau@debian.org>
+Build-Depends: debhelper-compat (= 12), autoconf, pkg-config, zlib1g-dev, libpcsclite-dev, libnss3-dev, libnspr4-dev, dh-exec (>=0.3)
+Standards-Version: 3.9.3
+Homepage: http://directory.fedoraproject.org/wiki/CoolKey
+Vcs-Browser: https://salsa.debian.org/debian/coolkey
+Vcs-Git: https://salsa.debian.org/debian/coolkey.git
+Rules-Requires-Root: no
+
+Package: coolkey
+Architecture: any
+Depends: libckyapplet1 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, libpcsclite1
+Recommends: libnss3-tools, epiphany-extensions
+Description: Smart Card PKCS #11 cryptographic module
+ Linux Driver support for the CoolKey and Common Access Card (CAC)
+ smart card security keys used in a Public Key Infrastructure (PKI).
+ The libpkcs11 module allows use of Smart Cards in applications
+ that use mozilla Network Security Services (NSS).
+
+Package: libckyapplet1
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Smart Card Coolkey applet
+ Protocol library for Coolkey applications.
+
+Package: libckyapplet1-dev
+Architecture: any
+Section: libdevel
+Depends: ${shlibs:Depends}, ${misc:Depends}, libckyapplet1 (= ${binary:Version})
+Description: Smart Card Coolkey applet development files
+ Header files and support for Coolkey applications.

@@ -1,0 +1,15 @@
+Description: Fix Firefox crash due to "Assertion `mOldCAC' failed" error
+Author: Eric Reischer
+Origin: http://www.spinics.net/linux/fedora/coolkey/msg00368.html
+Bug-Debian: http://bugs.debian.org/698230
+--- a/src/coolkey/slot.cpp
++++ b/src/coolkey/slot.cpp
+@@ -2215,6 +2215,8 @@
+     CKYBuffer_InitEmpty(&vBuf);
+     CKYBuffer_Resize(cert, 0);
+ 
++    *nextSize = 0;
++
+     /* handle the new CAC card read */
+     /* read the TLV */
+     status = CACApplet_ReadFile(conn, CAC_TAG_FILE, &tBuf, NULL);

@@ -1,0 +1,22 @@
+#!/usr/bin/make -f
+%:
+	dh $@
+
+# copy up to date files
+override_dh_auto_configure:
+	-test -r /usr/share/misc/config.sub && \
+		cp -f /usr/share/misc/config.sub config.sub
+	-test -r /usr/share/misc/config.guess && \
+		cp -f /usr/share/misc/config.guess config.guess
+	( PCSC_CFLAGS=`/usr/bin/pkg-config --cflags libpcsclite` ; PCSC_LIBS=`/usr/bin/pkg-config --libs libpcsclite` ; dh_auto_configure -- --with-debug --disable-dependency-tracking )
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -f config.guess config.sub
+
+# avoid libtool -rpath problems
+override_dh_auto_build:
+	sed < libtool > libtool-2 -e 's/^hardcode_libdir_flag_spec.*$$/hardcode_libdir_flag_spec=" -D__LIBTOOL_IS_A_FOOL__ "/' -e '/^archive_cmds="/s/"$$/ \\$$deplibs"/'
+	mv libtool-2 libtool
+	chmod 755 libtool
+	dh_auto_build

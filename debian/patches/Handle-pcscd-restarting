@@ -1,0 +1,75 @@
+Description: Handle pcscd restarting.
+Author: rrelyea <rrelyea@fedoraproject.org>
+Date:   Wed Jul 13 22:19:42 2011 +0000
+Origin: https://fedorahosted.org/coolkey/changeset?reponame=&new=95%40%2F&old=94%40%2F
+ svn.fedorahosted.org/svn/coolkey@95
+
+--- a/src/libckyapplet/cky_card.c
++++ b/src/libckyapplet/cky_card.c
+@@ -843,6 +843,11 @@
+     rv = ctx->scard->SCardGetStatusChange(ctx->context, timeout, 
+ 							readers, readerCount);
+     if (rv != SCARD_S_SUCCESS) {
++	if ((rv == SCARD_E_NO_SERVICE) || (rv == SCARD_E_SERVICE_STOPPED)) {
++	    /* if we were stopped, don't reuse the old context, 
++	     * pcsc-lite hangs */
++	    ckyCardContext_release(ctx); 
++	} 
+ 	ctx->lastError = rv;
+ 	return CKYSCARDERR;
+     }
+--- a/src/coolkey/slot.cpp
++++ b/src/coolkey/slot.cpp
+@@ -237,9 +237,14 @@
+ 
+     CKYStatus status = CKYCardContext_ListReaders(context, &readerNames);
+     if ( status != CKYSUCCESS ) {
+-	throw PKCS11Exception(CKR_GENERAL_ERROR,
+-                "Failed to list readers: 0x%x\n", 
+-				CKYCardContext_GetLastError(context));
++	/* if the service is stopped, treat it as if we have no readers */
++ 	if ((CKYCardContext_GetLastError(context) != SCARD_E_NO_SERVICE) && 
++	    (CKYCardContext_GetLastError(context) != SCARD_E_SERVICE_STOPPED)) {
++	    throw PKCS11Exception(CKR_GENERAL_ERROR,
++                 "Failed to list readers: 0x%x\n", 
++ 				CKYCardContext_GetLastError(context));
++	}
++
+     }
+ 
+     if (!readerStates) {
+@@ -1282,7 +1287,9 @@
+         #endif
+     } while ((status == CKYSUCCESS) ||
+        (CKYCardContext_GetLastError(context) == SCARD_E_TIMEOUT) ||
+-        ( CKYCardContext_GetLastError(context) == SCARD_E_READER_UNAVAILABLE));
++       (CKYCardContext_GetLastError(context) == SCARD_E_READER_UNAVAILABLE) ||
++       (CKYCardContext_GetLastError(context) == SCARD_E_NO_SERVICE) ||
++       (CKYCardContext_GetLastError(context) == SCARD_E_SERVICE_STOPPED) );
+ #else
+     do {
+ 	OSSleep(100);
+@@ -3398,10 +3405,12 @@
+         status = CKYApplet_ComputeCrypt(conn, keyNum, CKY_RSA_NO_PAD, direction,
+ 		input, NULL, output, getNonce(), &result);
+     } 
++#ifdef notdef /* CAC pin cachine is incomplete, don't enable it */
+     /* map the ISO not logged in code to the coolkey one */
+     if (status == CKYISO_CONDITION_NOT_SATISFIED) {
+ 	status = (CKYStatus) CKYISO_UNAUTHORIZED;
+     }
++#endif
+     if (status != CKYSUCCESS) {
+ 	if ( status == CKYSCARDERR ) {
+ 	    handleConnectionError();
+--- a/src/coolkey/Makefile.am
++++ b/src/coolkey/Makefile.am
+@@ -64,7 +64,7 @@
+ # coreconf .def file to a simplistic but acceptable libtool .sym file
+ #
+ coolkeypk11.sym: coolkeypk11.def
+-	grep -v ';+' $< | grep -v ';-' | sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' > $@
++	grep -v ';+' $< | grep -v ';-' | sed -e 's; DATA ;;' -e 's,;;,,' -e 's,;.*,,' | grep -v '^$$'> $@
+ 
+ clean-generic:
+ 	rm -f coolkeypk11.sym

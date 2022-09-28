@@ -1,0 +1,9 @@
+#! /usr/bin/dh-exec
+src/libckyapplet/.libs/libckyapplet.so usr/lib/
+src/libckyapplet/.libs/libckyapplet.a usr/lib/
+src/libckyapplet/libckyapplet.pc usr/lib/${DEB_HOST_MULTIARCH}/pkgconfig/
+src/libckyapplet/cky_applet.h usr/include/
+src/libckyapplet/cky_card.h usr/include/
+src/libckyapplet/cky_base.h usr/include/
+src/libckyapplet/cky_list.h usr/include/
+src/libckyapplet/cky_factory.h usr/include/
